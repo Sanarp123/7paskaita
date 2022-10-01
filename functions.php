@@ -165,13 +165,110 @@ function filterClients($klientai) {
     return $klientai;
 }
 
+//puslapiu mygtuku atvaizdavimas
+function pagination() {
+    
+    $klientai = readJson("klientai.json");
+    $kiek = count($klientai);//klientu kieki
+    $irasaiPerPuslapi = 15;//kiek irasu bus rodoma viename puslapyje
 
-function pagination() {}
+    if(isset($_GET["limit"])) {
+        $irasaiPerPuslapi = $_GET["limit"];
+    }
+
+    $page = 1;
+    if(isset($_GET["page"])) {
+        $page = $_GET["page"];
+    }
+
+    //ceil(lubos) - apvalina visalaika i didesne puse
+    //floor(grindys) - apvalina visalaika i mazesne puse
+    
+    // ceil(46/ 15) = 3.11111 = 4
+    // floor(46/15) = 3.11111 = 3
+
+
+    $puslapiuKiekis = ceil($kiek/$irasaiPerPuslapi);
+    echo "<span>Jūs esate $page iš $puslapiuKiekis </span>";
+    echo "<ul class='pagination'>";
+    for($i=1;$i<$puslapiuKiekis+1;$i++) {
+        if($i==$page) {
+            echo "<li class='page-item active'><a class='page-link' href='klientai.php?page=$i&limit=$irasaiPerPuslapi'>$i</a></li>";
+        } else {
+            echo "<li class='page-item'><a class='page-link' href='klientai.php?page=$i&limit=$irasaiPerPuslapi'>$i</a></li>";
+        }
+       
+    }
+    echo "</ul>";
+
+
+    
+
+    //var_dump($puslapiuKiekis);
+}
+
+//irasu nukarpymas
+
+function limitValues() {
+    $limitValues = array(
+        "15" => "15",
+        "30" => "30",
+        "45" => "45",
+        "visi" => "Visi"
+    );
+
+    foreach ($limitValues as $key => $value) {
+        if(isset($_GET["limit"]) && $key == $_GET["limit"]) {
+            echo "<option value='$key' selected>$value</option>";
+        } else {
+            echo "<option value='$key'>$value</option>";
+        }
+    }
+}
+
+
+
+function paginate($klientai) {
+    $page = 1;
+    if(isset($_GET["page"])){
+        $page = $_GET["page"];
+    }
+
+    $kiek = count($klientai);
+    $irasuKiekisPuslapyje = 15;
+
+    if(isset($_GET["limit"])) {
+        $irasaiPerPuslapi = $_GET["limit"];
+    }
+
+    $puslapiuKiekis = ceil($kiek/$irasuKiekisPuslapyje );
+
+    if($puslapiuKiekis < $page || $page < 1) {
+        $page = 1;
+    }
+
+    $offset = ($page * $irasuKiekisPuslapyje) - $irasuKiekisPuslapyje;
+
+    $klientai = array_slice($klientai,$offset,$irasuKiekisPuslapyje, true);
+    return $klientai;
+}
 //void tuscia
 function getClients() {
     $klientai = readJson("klientai.json");
+    
     $klientai = sortClients($klientai);
-    //$klientai = filterClients($klientai);
+    $klientai = filterClients($klientai);
+
+    if((isset($_GET["limit"]) && $_GET["limit"] != "visi") || !isset($_GET["limit"])) {
+        $klientai = paginate($klientai);    
+    }  
+
+
+    //a)Sujungti filtravimo ir rikiavimo formas
+    // visi kintamieji nueina i nuoroda ir juos galima pasiimti per GET
+    // ir suveikia tiek sortClients tiek filterClients
+    //b) musu formos gali likti atskiros, taciau jos turi tureti
+    //pasleptus input laukelius su kitos formos informacija
 
     foreach($klientai as  $i => $klientas) {
         echo "<tr>";
@@ -238,5 +335,65 @@ function updateClient() {
 //rikiuoti klientus
 
 //filtruoti klientus
+//puslapiavimas
+
+
+function rikiuok($masyvas) {
+    rsort($masyvas); //reverse sort - atvirkstine tvarka
+    return $masyvas;
+}
+
+function filtruok($masyvas) {
+    //array_filter
+    $masyvas = array_filter($masyvas, function($elementas){
+        if($elementas % 2 == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    });
+    
+    return $masyvas;
+}
+
+
+function pavyzdys() {
+    $masyvas = array(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20);
+    var_dump($masyvas);
+    
+
+//filtravimo uzdavinys - atrinkti tik lyginius skaicius
+    $masyvas = filtruok($masyvas);
+    var_dump($masyvas);
+
+    //rikiavimo uzdavinys - surikiuoti atvirkstine tvarka
+    //20 iki 1 (DESC)
+    $masyvas = rikiuok($masyvas);
+
+    var_dump($masyvas);
+    
+}
+
+//array_slice - funkcija, kuri atrenka masyvo dali pagal nurodyta kriteriju
+
+function masyvoPjaustymas() {
+    $masyvas = array(1,2,3,4,5,6,7,8,9,10,11);
+    //masyvas, nuo kurios vietos norime imti duomenis, kiek duomenu norime paimti, ar norime isaugoti sena indeksa(true)
+    //nuo pasirinkto puslapio 3, man atvaizduoja duomenis
+
+    $page = $_GET["page"];
+    $irasuKiekisPuslapyje = 2;
+    $offset = ($page * $irasuKiekisPuslapyje) - $irasuKiekisPuslapyje;
+
+    $dinaminisPuslapis = array_slice($masyvas,$offset,$irasuKiekisPuslapyje, true);
+
+    var_dump($dinaminisPuslapis);
+    $pirmasPuslapis = array_slice($masyvas,0,2, true); // (1 * 2) - 2 = 0
+    // var_dump($pirmasPuslapis);
+    $antrasPuslapis = array_slice($masyvas,2,2, true); //  (2 * 2) - 2 = 2
+    // var_dump($antrasPuslapis);
+    $treciasPuslapis = array_slice($masyvas,4,2, true); // ($page * $irasuKiekisPuslapyje) - irasuKiekisPuslapyje = 4
+    // var_dump($treciasPuslapis);
+}
 
 ?>

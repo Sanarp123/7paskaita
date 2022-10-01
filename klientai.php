@@ -46,6 +46,7 @@
 
             <div class="col-lg-4">
                 <form method="get" action="klientai.php">
+                    <input type="hidden" name="miestas" value="<?php echo (isset($_GET["miestas"]) ? $_GET["miestas"]: "visi"); ?>">
                     <div class="form-group">
                         <label for="vardas">Rikiavimo stulpelis</label>
                         <select class="form-select" name="sortCollumn">
@@ -84,7 +85,9 @@
                 </form>
                             </div>
             <div class="col-lg-4">
-            <form method="get" action="klientai.php">                    
+            <form method="get" action="klientai.php">
+            <input type="hidden" name="sortOrder" value="<?php echo (isset($_GET["sortOrder"]) ? $_GET["sortOrder"]: "DESC"); ?>">
+            <input type="hidden" name="sortCollumn" value="<?php echo (isset($_GET["sortCollumn"]) ? $_GET["sortCollumn"]: "id"); ?>">                  
                     <div class="form-group">
                         <label for="pavarde">Filtras</label>
                         <select class="form-select" name="miestas">
@@ -99,6 +102,17 @@
             </div>                    
         </div>
 
+        <div class="row">
+            <div class="col-lg-2">
+                <form method="get" action="klientai.php">
+                    <select class="form-select" name="limit">
+                            <?php limitValues(); ?>
+                    </select>
+                    <button type="submit" class="btn btn-primary">Irasu kiekis</button>    
+                </form>
+            </div>
+        </div>    
+
         <?php showMessage(); ?>
         <table class="table table-striped">
             <tr>
@@ -111,7 +125,13 @@
             </tr>
             <?php getClients(); ?>
         </table>
-
+        <div class="row">
+        <?php if((isset($_GET["limit"]) && $_GET["limit"] != "visi") || !isset($_GET["limit"])) { ?>   
+            <?php pagination(); ?> 
+        <?php  } ?>
+    </div>                     
+                              
+                              
     <!-- 1. kaip atvirkstine tvarka atvaizduoti id? x -->
     <!-- 2. neveikia sesijos zinute x
 I just solved my problem by adding exit after redirecting user to escape the execution of the register page, so the session won't be unset in the current page before using it in the next page.
