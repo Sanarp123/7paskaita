@@ -23,7 +23,7 @@ function addClient() {
 
     if(isset($_POST["addClient"])){
            $file = $_FILES["file"];
-           $file_dir = "uploads";
+           $file_dir = "uploads/";
            $file_path = $file_dir . $file["name"];
            if(move_uploaded_file($file["tmp_name"],$file_path)) {
         $naujasKlientas = array(
@@ -42,6 +42,7 @@ function addClient() {
            }
            else {
                echo "Įvyko klaida";
+               exit();
             }
         exit();
     }
@@ -287,9 +288,13 @@ function getClients() {
             echo "<td>".$klientas["pavarde"]."</td>";
             echo "<td>".$klientas["amzius"]."</td>";
             echo "<td>".$klientas["miestas"]."</td>";
-           // echo "<td>".$klientas["foto"]."</td>";
-          //  $linkas => $klientas["foto"];
-            //echo "<td><img src='' alt='./uploads/photo-default.avif' width='150' height='150'></td>";
+                if(strlen($klientas['foto']) > 0)  {
+            $filepath= $klientas["foto"]; 
+             echo "<td><img src='$filepath' width='150' height='150'></td>";
+            }
+          else {
+               echo "<td><img src='./uploads/photo-default.avif' width='150' height='150'></td>";
+          }
 
             echo "<td>";
                 echo "<a href='edit.php?id=$i' class='btn btn-secondary'>Edit</a>";
@@ -325,11 +330,16 @@ function updateClient() {
     $klientai=readJson("klientai.json");
 
     if(isset($_POST["updateClient"])){
-        $klientas = array(
+           $file = $_FILES["file"];
+           $file_dir = "uploads/";
+           $file_path = $file_dir . $file["name"];
+           if(move_uploaded_file($file["tmp_name"],$file_path)) {
+            $klientas = array(
             "vardas" => $_POST["vardas"],
             "pavarde" => $_POST["pavarde"],
             "amzius" => $_POST["amzius"],
-            "miestas" => $_POST["miestas"]
+            "miestas" => $_POST["miestas"],
+            "foto" => $file_path
         );
         //kliento numeris
         //$_GET["id"] - sitoje vietoje egzistuoja? nebeegzistuoja
@@ -343,6 +353,11 @@ function updateClient() {
         header("Location: klientai.php");
         //nutraukia viso php failo veikima nuo sitos vietos
         exit();
+    }
+        else {
+            echo "Įvyko klaida";
+            exit();
+         }
     }
 }
 

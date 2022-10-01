@@ -18,7 +18,7 @@
             <div class="col-lg-4">
 
             <!-- taip neveikia -->
-                <form method="post" action="klientai.php">
+                <form method="post" action="klientai.php" enctype="multipart/form-data">
 
                 <input type="hidden" name="id" value="<?php echo $_GET['id']; ?>">
                     <div class="form-group">
@@ -37,6 +37,14 @@
                         <label for="miestas">Miestas</label>
                         <input type="text" class="form-control" value="<?php echo $klientas["miestas"]; ?>" id="miestas" name="miestas">
                     </div>
+
+                    <br>
+                    <div class="form-group">   
+                        <label for="file">Foto</label>
+                        <input type="file" class="form-control" id="file" name="file">
+                    </div>
+                    <br>
+
                     <button type="submit" class="btn btn-primary" name="updateClient">Update Client</button>
                 </form>
             </div>
