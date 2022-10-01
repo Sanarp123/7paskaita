@@ -121,7 +121,10 @@
                 <th>Pavardė</th>
                 <th>Amžius</th>
                 <th>Miestas</th>
+                <th>Foto</th>
                 <th>Veiksmai</th>
+
+
             </tr>
             <?php getClients(); ?>
         </table>

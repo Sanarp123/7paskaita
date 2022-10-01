@@ -270,6 +270,7 @@ function getClients() {
     //b) musu formos gali likti atskiros, taciau jos turi tureti
     //pasleptus input laukelius su kitos formos informacija
 
+
     foreach($klientai as  $i => $klientas) {
         echo "<tr>";
             echo "<td>$i</td>";
@@ -277,6 +278,8 @@ function getClients() {
             echo "<td>".$klientas["pavarde"]."</td>";
             echo "<td>".$klientas["amzius"]."</td>";
             echo "<td>".$klientas["miestas"]."</td>";
+            echo "<td><img src='' alt='./uploads/photo-default.avif' width='150' height='150'></td>";
+
             echo "<td>";
                 echo "<a href='edit.php?id=$i' class='btn btn-secondary'>Edit</a>";
                 echo "<form method='post' action='klientai.php'>

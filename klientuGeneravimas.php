@@ -13,9 +13,9 @@
 //file_get_contents(is failo gauti turini)
 //tekstinio failo informacija pavercia i string(tekstini kintamaji)
 
-$failas = file_get_contents("tekstas.txt");
+// $failas = file_get_contents("tekstas.txt");
 
-echo $failas;
+// echo $failas;
 
 //irasyti i faila informacija(write)
 //file_put_contents()
@@ -42,7 +42,9 @@ $tekstasKuriNoriuIrasyti = "Labas rytas";
     "vardas" => "Jonas",
     "pavarde" => "Jonaitis",
     "amzius" => 25,
-    "miestas" => "Vilnius"
+    "miestas" => "Vilnius",
+    "foto" => ""
+
 );
 
 
@@ -50,7 +52,7 @@ $klientas1 = array(
     "vardas" => "Petras",
     "pavarde" => "Petraitis",
     "amzius" => 28,
-    "miestas" => "Kaunas"
+    "foto" => ""
 );
 
 //masyvas - kintamuju sarasas su eiles numeriu
@@ -70,7 +72,9 @@ for($i=0; $i<100;$i++) {
         "vardas" => "Petras$i",
         "pavarde" => "Petraitis$i",
         "amzius" => rand(18,65),
-        "miestas" => "Kaunas"
+        "miestas" => "Kaunas",
+        "foto" => ""
+
     );
 
 
