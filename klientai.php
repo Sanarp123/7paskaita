@@ -23,7 +23,7 @@
 
         <div class="row">
             <div class="col-lg-4">
-                <form method="post" action="klientai.php">
+                <form method="post" action="klientai.php" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="vardas">Vardas</label>
                         <input type="text" class="form-control" id="vardas" name="vardas">
@@ -40,6 +40,12 @@
                         <label for="miestas">Miestas</label>
                         <input type="text" class="form-control" id="miestas" name="miestas">
                     </div>
+                    <br>
+                    <div class="form-group">   
+                        <label for="file">Foto</label>
+                        <input type="file" class="form-control" id="file" name="file">
+                    </div>
+                    <br>
                     <button type="submit" class="btn btn-primary" name="addClient">Add Client</button>
                 </form>
             </div>
@@ -123,7 +129,7 @@
                 <th>Miestas</th>
                 <th>Foto</th>
                 <th>Veiksmai</th>
-
+ 
 
             </tr>
             <?php getClients(); ?>

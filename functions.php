@@ -22,11 +22,16 @@ function addClient() {
     $klientai=readJson("klientai.json");
 
     if(isset($_POST["addClient"])){
+           $file = $_FILES["file"];
+           $file_dir = "uploads";
+           $file_path = $file_dir . $file["name"];
+           if(move_uploaded_file($file["tmp_name"],$file_path)) {
         $naujasKlientas = array(
             "vardas" => $_POST["vardas"],
             "pavarde" => $_POST["pavarde"],
             "amzius" => $_POST["amzius"],
-            "miestas" => $_POST["miestas"]
+            "miestas" => $_POST["miestas"],
+            "foto" => $file_path
         );
         $klientai[] = $naujasKlientas;
         writeJson("klientai.json", $klientai);
@@ -34,6 +39,10 @@ function addClient() {
 
         header("Location: klientai.php");
         //nutraukia viso php failo veikima nuo sitos vietos
+           }
+           else {
+               echo "Įvyko klaida";
+            }
         exit();
     }
 }
@@ -278,12 +287,14 @@ function getClients() {
             echo "<td>".$klientas["pavarde"]."</td>";
             echo "<td>".$klientas["amzius"]."</td>";
             echo "<td>".$klientas["miestas"]."</td>";
-            echo "<td><img src='' alt='./uploads/photo-default.avif' width='150' height='150'></td>";
+           // echo "<td>".$klientas["foto"]."</td>";
+          //  $linkas => $klientas["foto"];
+            //echo "<td><img src='' alt='./uploads/photo-default.avif' width='150' height='150'></td>";
 
             echo "<td>";
                 echo "<a href='edit.php?id=$i' class='btn btn-secondary'>Edit</a>";
                 echo "<form method='post' action='klientai.php'>
-                        <button type='submit' name='delete' value='$i' class='btn btn-danger'>Delete</button>
+                       <button type='submit' name='delete' value='$i' class='btn btn-danger'>Delete</button>
                     </form>";
             echo "</td>";       
         echo "</tr>";
